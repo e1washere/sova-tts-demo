@@ -1,0 +1,24 @@
+
+🎉 SOVA TTS Demo Package Created!
+
+📁 Package Directory: ./SOVA_TTS_Demo_20250604_170905/
+📦 Archive File: SOVA_TTS_Demo_20250604_170905.zip
+
+📧 How to share:
+1. Send the zip file: SOVA_TTS_Demo_20250604_170905.zip
+2. Or share the entire folder: ./SOVA_TTS_Demo_20250604_170905/
+
+🚀 Recipient instructions:
+1. Extract files
+2. pip3 install flask flask-cors pyyaml requests
+3. python3 demo_app.py
+4. Open http://localhost:8899/demo_interface.html
+
+✅ Demo includes:
+- Working TTS API server
+- Web interface demonstration
+- Test scripts
+- Full documentation in Russian
+- API examples and curl commands
+
+Total package size: 0.2 MB
