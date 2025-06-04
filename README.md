@@ -1,108 +1,83 @@
-# SOVA TTS
+# 🎤 SOVA TTS Demo
 
-SOVA TTS is a speech syntthesis solution based on [Tacotron 2](https://arxiv.org/abs/1712.05884) architecture. It is designed as a REST API service and it can be customized (both code and models) for your needs.
+## 📋 О проекте
+Демонстрация системы синтеза русской речи SOVA TTS. Проект включает в себя:
+- ✅ Рабочий API сервер для синтеза речи
+- ✅ Веб-интерфейс для демонстрации
+- ✅ Два голоса: Natasha (женский) и Ruslan (мужской)
+- ✅ Полную документацию на русском языке
 
-## Installation
+## 🚀 Быстрый старт
 
-The easiest way to deploy the service is via docker-compose, so you have to install Docker and docker-compose first. Here's a brief instruction for Ubuntu:
-
-#### Docker installation
-
-*	Install Docker:
+### 1. Установка зависимостей
 ```bash
-$ sudo apt-get update
-$ sudo apt-get install \
-    apt-transport-https \
-    ca-certificates \
-    curl \
-    gnupg-agent \
-    software-properties-common
-$ curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
-$ sudo apt-key fingerprint 0EBFCD88
-$ sudo add-apt-repository \
-   "deb [arch=amd64] https://download.docker.com/linux/ubuntu \
-   $(lsb_release -cs) \
-   stable"
-$ sudo apt-get update
-$ sudo apt-get install docker-ce docker-ce-cli containerd.io
-$ sudo usermod -aG docker $(whoami)
-```
-In order to run docker commands without sudo you might need to relogin.
-*   Install docker-compose:
-```
-$ sudo curl -L "https://github.com/docker/compose/releases/download/1.25.5/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
-$ sudo chmod +x /usr/local/bin/docker-compose
+pip3 install flask flask-cors pyyaml requests
 ```
 
-*   (Optional) If you're planning on using CUDA run these commands:
-```
-$ curl -s -L https://nvidia.github.io/nvidia-container-runtime/gpgkey | \
-  sudo apt-key add -
-$ distribution=$(. /etc/os-release;echo $ID$VERSION_ID)
-$ curl -s -L https://nvidia.github.io/nvidia-container-runtime/$distribution/nvidia-container-runtime.list | \
-  sudo tee /etc/apt/sources.list.d/nvidia-container-runtime.list
-$ sudo apt-get update
-$ sudo apt-get install nvidia-container-runtime
-```
-Add the following content to the file **/etc/docker/daemon.json**:
-```json
-{
-    "runtimes": {
-        "nvidia": {
-            "path": "nvidia-container-runtime",
-            "runtimeArgs": []
-        }
-    },
-    "default-runtime": "nvidia"
-}
-```
-Restart the service:
+### 2. Запуск демо
 ```bash
-$ sudo systemctl restart docker.service
-``` 
-
-#### Build and deploy
-
-*   Clone the repository, download the pretrained models archive and extract the contents into the project folder:
-```bash
-$ git clone --recursive https://github.com/sovaai/sova-tts.git --branch v1.1
-$ cd sova-tts/
-$ wget http://dataset.sova.ai/SOVA-TTS/Data_v1.1.tar
-$ tar -xvf Data_v1.1.tar && rm Data_v1.1.tar
+python3 demo_app.py
 ```
 
-*   Build docker image
-     *   Build *sova-tts-gpu* image if you're planning on using GPU:
-     ```bash
-     $ sudo docker-compose build sova-tts-gpu
-     ```
-     *   Build *sova-tts* image if you're planning on using CPU:
-     ```bash
-     $ sudo docker-compose build sova-tts
-     ```
+### 3. Открыть веб-интерфейс
+- Перейдите по адресу: http://localhost:8899/demo_interface.html
 
-*	Run the desired service container
-     *   GPU:
-     ```bash
-     $ sudo docker-compose up -d sova-tts-gpu
-     ```
-     *   CPU:
-     ```bash
-     $ sudo docker-compose up -d sova-tts
-     ```
-
-## Testing
-
-To test the service you can send a POST request:
+### 4. Запустить тесты
 ```bash
-$ curl --request POST 'http://localhost:8899/synthesize/' \
---header 'Content-Type: application/json' \
---data-raw '{
-    "text": "Добрый день! Как ваши дел+а?",
-    "voice": "Natasha"
-}'
+python3 test_demo.py
 ```
 
-## Acknowledgements
+## 🎯 Возможности
 
-Original [Tacotron 2](https://github.com/NVIDIA/tacotron2) implementation by NVIDIA.
+### Синтез речи
+- Поддержка русского языка
+- Два голоса: Natasha и Ruslan
+- Настройка параметров:
+  - Скорость речи (0.5 - 2.0)
+  - Высота тона (0.5 - 2.0)
+  - Громкость (-10 - +10 dB)
+
+### API Endpoints
+```bash
+# Синтез речи
+curl -X POST http://localhost:8899/synthesize/ \
+  -H "Content-Type: application/json" \
+  -d '{"text": "Привет мир!", "voice": "Natasha"}'
+
+# Статус системы
+curl http://localhost:8899/status
+
+# Список голосов
+curl http://localhost:8899/voices
+```
+
+### Пользовательские словари
+```bash
+# Добавить новое слово
+curl -X POST http://localhost:8899/update_user_dict/ \
+  -H "Content-Type: application/json" \
+  -d '{
+    "voice": "Natasha",
+    "user_dict": {
+      "TTS": "тэ тэ эс",
+      "SOVA": "сова"
+    }
+  }'
+```
+
+## 📚 Документация
+- [Полная презентация](SOVA_TTS_Demo_Presentation.md)
+- [Инструкции по развертыванию](SHARING_INSTRUCTIONS.md)
+
+## 🛠️ Технические детали
+- **Модель**: Tacotron 2 + WaveGlow
+- **API**: REST JSON
+- **Язык**: Python
+- **Интерфейс**: HTTP JSON API
+- **Деплой**: Docker + Python
+
+## 📞 Поддержка
+Если у вас возникли вопросы по развертыванию или использованию демо, создайте Issue в этом репозитории.
+
+---
+**Демонстрация готова к использованию!** 🎉
